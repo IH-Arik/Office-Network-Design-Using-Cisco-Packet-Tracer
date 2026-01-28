@@ -1,0 +1,32 @@
+# Cisco Packet Tracer Files
+*.pkt.bak
+*.pkt.tmp
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temporary Files
+*.tmp
+*.temp
+temp/
+
+# Backup Files
+*.bak
+*.backup
+
+# PDF Notes (if you have working notes)
+*_notes.pdf
+*_draft.pdf
