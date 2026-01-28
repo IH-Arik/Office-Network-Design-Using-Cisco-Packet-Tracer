@@ -1,0 +1,336 @@
+# Sample Network Configurations for Office Network Design
+# These are example configurations based on the network topology
+
+# ==========================================
+# CORE ROUTER CONFIGURATION
+# ==========================================
+version 15.1
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Core-Router-01
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKUpm.
+!
+no aaa new-model
+memory-size iomem 10
+!
+ip cef
+!
+interface GigabitEthernet0/0
+ description WAN Connection to ISP
+ ip address 203.0.113.2 255.255.255.252
+ ip nat outside
+ ip access-group WAN-IN in
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ description LAN Connection to Core Switch
+ ip address 192.168.1.1 255.255.255.0
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.10
+ description Management VLAN
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/1.20
+ description Employee VLAN
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/1.30
+ description Guest VLAN
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/1.40
+ description Server VLAN
+ encapsulation dot1Q 40
+ ip address 192.168.40.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet0/1.50
+ description DMZ VLAN
+ encapsulation dot1Q 50
+ ip address 192.168.50.1 255.255.255.0
+ ip nat inside
+!
+router ospf 1
+ router-id 192.168.1.1
+ log-adjacency-changes
+ network 192.168.0.0 0.0.255.255 area 0
+!
+ip nat inside source list 100 interface GigabitEthernet0/0 overload
+ip nat inside source static 192.168.50.10 203.0.113.10
+ip nat inside source static 192.168.50.20 203.0.113.20
+!
+access-list 100 permit ip 192.168.0.0 0.0.255.255 any
+access-list 101 permit tcp any host 203.0.113.10 eq 80
+access-list 101 permit tcp any host 203.0.113.10 eq 443
+access-list 101 permit tcp any host 203.0.113.20 eq 25
+access-list 101 permit tcp any host 203.0.113.20 eq 443
+!
+ip dhcp pool EMPLOYEES
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 8.8.8.8 8.8.4.4
+ lease 0 8
+!
+ip dhcp pool GUESTS
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 8.8.8.8 8.8.4.4
+ lease 0 2
+!
+line con 0
+line aux 0
+line vty 0 4
+ login
+!
+end
+
+# ==========================================
+# CORE SWITCH CONFIGURATION
+# ==========================================
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Core-Switch-01
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKUpm.
+!
+no aaa new-model
+system mtu routing 1500
+!
+vlan 10
+ name Management
+!
+vlan 20
+ name Employees
+!
+vlan 30
+ name Guests
+!
+vlan 40
+ name Servers
+!
+vlan 50
+ name DMZ
+!
+vlan 60
+ name Voice
+!
+interface GigabitEthernet0/1
+ description To Core Router
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50,60
+!
+interface GigabitEthernet0/2
+ description To Distribution Switch 1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50,60
+!
+interface GigabitEthernet0/3
+ description To Distribution Switch 2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50,60
+!
+interface Vlan10
+ ip address 192.168.10.1 255.255.255.0
+!
+interface Vlan20
+ ip address 192.168.20.1 255.255.255.0
+!
+interface Vlan30
+ ip address 192.168.30.1 255.255.255.0
+!
+interface Vlan40
+ ip address 192.168.40.1 255.255.255.0
+!
+interface Vlan50
+ ip address 192.168.50.1 255.255.255.0
+!
+interface Vlan60
+ ip address 192.168.60.1 255.255.255.0
+!
+ip default-gateway 192.168.1.1
+!
+line con 0
+line vty 0 4
+ login
+!
+end
+
+# ==========================================
+# ACCESS SWITCH CONFIGURATION (Employee Workstations)
+# ==========================================
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Access-Switch-01
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKUpm.
+!
+vlan 10
+ name Management
+!
+vlan 20
+ name Employees
+!
+interface GigabitEthernet0/1
+ description Uplink to Distribution Switch
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20
+!
+interface FastEthernet0/2
+ description Employee Workstation 1
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ description Employee Workstation 2
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+!
+interface Vlan10
+ ip address 192.168.10.10 255.255.255.0
+!
+ip default-gateway 192.168.10.1
+!
+line con 0
+line vty 0 4
+ login
+!
+end
+
+# ==========================================
+# WIRELESS ACCESS POINT CONFIGURATION
+# ==========================================
+version 12.4
+!
+hostname AP-01
+!
+dot11 ssid Corporate
+ vlan 20
+ authentication open eap eap_methods
+ authentication key-management wpa version 2
+ wpa-psk ascii 7 1234567890123456
+!
+dot11 ssid Guest
+ vlan 30
+ authentication open
+ guest-mode
+!
+interface Dot11Radio0
+ ssid Corporate
+ encryption mode ciphers aes-ccm
+ channel 6
+ speed basic-5.5 6.0 9.0 11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ no shutdown
+!
+interface Dot11Radio1
+ ssid Guest
+ encryption mode ciphers aes-ccm
+ channel 11
+ speed basic-5.5 6.0 9.0 11.0 12.0 18.0 24.0 36.0 48.0 54.0
+ no shutdown
+!
+interface BVI1
+ ip address 192.168.20.254 255.255.255.0
+!
+ip default-gateway 192.168.20.1
+!
+line con 0
+line vty 0 4
+ login
+!
+end
+
+# ==========================================
+# ASA FIREWALL CONFIGURATION
+# ==========================================
+ASA Version 9.1(2)
+!
+hostname ASA-Firewall-01
+!
+interface GigabitEthernet0/0
+ nameif outside
+ security-level 0
+ ip address 203.0.113.1 255.255.255.252
+!
+interface GigabitEthernet0/1
+ nameif inside
+ security-level 100
+ ip address 192.168.1.254 255.255.255.0
+!
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.10 eq 80
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.10 eq 443
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.20 eq 25
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.20 eq 443
+access-list OUTSIDE_IN extended permit tcp any host 203.0.113.30 eq 443
+!
+access-group OUTSIDE_IN in interface outside
+!
+nat (inside,outside) source obj any destination obj any
+!
+route outside 0.0.0.0 0.0.0.0 203.0.113.2 1
+!
+telnet timeout 5
+ssh timeout 5
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum 512
+!
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map
+  inspect ftp
+  inspect h323 h225
+  inspect h323 ras
+  inspect rsh
+  inspect rtsp
+  inspect esmtp
+  inspect sqlnet
+  inspect skinny
+  inspect sunrpc
+  inspect xdmcp
+  inspect sip
+  inspect netbios
+  inspect tftp
+!
+service-policy global_policy global
+!
+end
