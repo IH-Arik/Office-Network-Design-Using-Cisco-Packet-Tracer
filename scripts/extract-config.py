@@ -4,6 +4,7 @@ Packet Tracer Configuration Extractor
 This script helps extract network configurations from Packet Tracer files
 """
 
+import utils.session
 import os
 import sys
 import subprocess

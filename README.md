@@ -2,7 +2,7 @@
 
 A comprehensive office network infrastructure design implemented in Cisco Packet Tracer, demonstrating enterprise-level network topology and configuration.
 
-## 🏢 Project Overview
+##  Project Overview
 
 This project showcases a complete office network design with:
 - Multi-department network segmentation
@@ -10,7 +10,7 @@ This project showcases a complete office network design with:
 - Secure access control
 - Scalable infrastructure design
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 ├── docs/                    # Documentation files
@@ -27,7 +27,7 @@ This project showcases a complete office network design with:
 └── Office_Network_Design_Using_Cisco_Packet_Tracer.pdf  # Project documentation
 ```
 
-## 🌐 Network Architecture
+##  Network Architecture
 
 ### Key Components
 - **Core Layer**: High-performance switches and routers
@@ -42,7 +42,7 @@ This project showcases a complete office network design with:
 - Server VLAN
 - DMZ
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Cisco Packet Tracer 7.0 or higher
@@ -62,14 +62,14 @@ This project showcases a complete office network design with:
 
 3. Review the documentation in the `docs/` folder
 
-## 📖 Documentation
+##  Documentation
 
 - [Network Topology](docs/network-topology.md) - Detailed network architecture
 - [IP Addressing Scheme](docs/ip-addressing.md) - Complete IP allocation plan
 - [Security Configuration](docs/security-policy.md) - Security policies and implementation
 - [Implementation Guide](docs/implementation.md) - Step-by-step setup instructions
 
-## 🔧 Configuration Details
+##  Configuration Details
 
 ### VLAN Configuration
 - VLAN 10: Management (192.168.10.0/24)
@@ -83,7 +83,7 @@ This project showcases a complete office network design with:
 - Static routes for external connectivity
 - HSRP for gateway redundancy
 
-## 🛡️ Security Features
+##  Security Features
 
 - Access Control Lists (ACLs)
 - Port security
@@ -91,14 +91,14 @@ This project showcases a complete office network design with:
 - Firewall rules
 - Network Access Control (NAC)
 
-## 📊 Network Monitoring
+##  Network Monitoring
 
 - SNMP configuration
 - Syslog setup
 - NetFlow implementation
 - Performance monitoring
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -106,17 +106,17 @@ This project showcases a complete office network design with:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+##  Author
 
 **IH-Arik**
 - GitHub: [IH-Arik](https://github.com/IH-Arik)
 - Project: Office Network Design Using Cisco Packet Tracer
 
-## 📞 Support
+##  Support
 
 For questions or support:
 - Create an issue in this repository
@@ -125,4 +125,4 @@ For questions or support:
 
 ---
 
-⭐ If this project helps you, please give it a star!
+ If this project helps you, please give it a star!
