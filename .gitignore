@@ -8,7 +8,6 @@ Thumbs.db
 desktop.ini
 
 # IDE Files
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -30,3 +29,7 @@ temp/
 # PDF Notes (if you have working notes)
 *_notes.pdf
 *_draft.pdf
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
